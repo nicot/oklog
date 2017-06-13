@@ -35,6 +35,7 @@ func (realFilesystem) Create(path string) (File, error) {
 }
 
 func (fs realFilesystem) Open(path string) (File, error) {
+	// Maybe we should do the limiter here?
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -49,7 +50,7 @@ func (fs realFilesystem) Open(path string) (File, error) {
 		if err != nil {
 			return nil, err
 		}
-		rf.Reader = ioext.OffsetReader(r, 0)
+		rf.Reader = ioext.OffsetReader(r, 0) // Can't this just be r?
 		rf.Closer = multiCloser{r, f}
 	}
 	return rf, nil
